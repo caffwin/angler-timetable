@@ -82,6 +82,16 @@ find_weather_pattern(weather_time_list, "Thunder", "Clear")
 # includes the time (in game time) when the weather change occurs
 
 
+# Also must consider: One given fish may have flexible weather requirements, which means..
+# The first weather condition may vary, but the last one is always the same
+
+# Example:
+
+# Fair Skies > Thunder OR Clear > Thunder OR Wind > Thunder
+
 
 # Eventually: 
 # Figure out how to pass in-game time and weather patterns from client-side to server
+
+
+

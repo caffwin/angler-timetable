@@ -1,0 +1,32 @@
+fish_name, fish_img, fish_location, fish_bait, fish_wc1, fish_wc2, fish_time_start, fish_time_end, is_mooch
+Ukiki, /img/fish.jpg, Hell's Lid, Blue Bobbit, Wind, None, 08:00, 12:00, False
+Alligator Snapping Turtle, /img/fish2.jpg, The Bull's Bath, Suspending Minnow, [Clear, Fair], None, None, None, False
+Lily of the Veil, /img/fish3.jpg, The Arms of Meed, Suspending Minnow, Fair, Clear, None, None, False
+The Undecided, /img/fish4.jpg, The Slow Wash, Gyr Abanian Trout, [Fair, Clouds, Fog], None, 08:00, 12:00, False 
+Gyr Abanian Trout, /img/fish5.jpg, None, 
+
+
+# Considerations for handling mooching:
+#   Assign the keyword "Mooch" as the bait 
+    # Search separate "mooch_data.txt" file for data to return to user
+
+#   Include the name of the fish in fish_bait column > re-query for all rows where is_mooch = True
+    #   Search through these, find matching name and return helpful attributes/info for this row
+
+# How to handle mooch fish coming from different locations/worlds? Include columns or set to None?
+# Are mooch and regular fish attributes so different to the point where it makes sense to 
+# create another data set?
+
+# Mooch fish are commons - just assume that if bait is an existing fish (aka mooch), it's available 
+# in the same area?
+# Every single mooch fish is available in the same area since they need to be chained,
+# so this seems like a good idea. There is no instance of a mooch being from a different location.
+# Could it be helpful to list all locations for that specific?
+# Users will rarely look for mooch fish locations, and are only interested in the big fish. 
+
+# If wanting to be specific, locations can still be listed in an array, this data just needs to be
+# accurate, otherwise mooch fish may not show up in searches
+
+
+# Should area and world be included in this data set? 
+# Create a separate list of all worlds, areas and locations and join to find specific species

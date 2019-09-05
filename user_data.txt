@@ -1,0 +1,2 @@
+fname, lname, username, email, pw
+John , Doe , jdoe , jdoe@gmail.com , test123

@@ -54,13 +54,22 @@ class Fish(db.Model):
     # Some fish are available for more than one "block" of time - create start and end times
     # in the form of two arrays, with matching respective indices? 
 
+    # Example:
+    # Start: [08:00, 20:00]
+    # End:   [16:00, 04:00]
+    #           0      1
+    # First time slot begins at start[0], finishes end[0]
+    # Second time slot begins at start[1], finishes end[1]
+
     __tablename__ = "fishies"
 
     fish_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     fish_name = db.Column(db.String(50), nullable=False)
+    fish_location = db.Column(db.String(24), nullable=True)
     fish_img = db.Column(db.String(50), nullable=True)
-    fish_bait = db.Column(db.String(50), nullable=True)
-    fish_wc = db.Column(db.String(500), nullable=True) 
+    fish_bait = db.Column(db.String(50), nullable=True) # Can this be an array?
+    fish_wc1 = db.Column(db.String(500), nullable=True) # same with this
+    fish_wc2 = db.Column(db.String(500), nullable=True) 
     fish_timetable = db.Column(db.String(500), nullable=True)
 
     # fish_time_start = db.Column(db.String(8), nullable=True)
@@ -72,7 +81,7 @@ class Fish(db.Model):
         return 'Fish ID: {}, fish name: {}, best bait: {}, required weather: {}'.format(self.fish_id, self.fish_name, self.fish_bait, self.fish_wc)
 
 
-class ToFish(db.Model):
+class FishList(db.Model):
 
     """A list of all fish that a user will see"""
 
@@ -82,7 +91,7 @@ class ToFish(db.Model):
     # Subtractive system? ToFish table starts as full, and users will manually remove items 
     # rather than adding caught fish one by one
 
-    __tablename__ = "to_fish"
+    __tablename__ = "fish_list"
 
     to_fish_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     fish_id = db.Column(db.Integer, 
@@ -93,7 +102,7 @@ class ToFish(db.Model):
     # fav_date = db.Column(db.DateTime)
 
     user = db.relationship('User',
-                           backref="to_fish",
+                           backref="fish_list",
                            order_by=to_fish_id)
     # Necessary to see how many fish have been favourited by a user
 
