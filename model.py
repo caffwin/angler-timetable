@@ -67,13 +67,28 @@ class Fish(db.Model):
     fish_name = db.Column(db.String(50), nullable=False)
     fish_location = db.Column(db.String(24), nullable=True)
     fish_img = db.Column(db.String(50), nullable=True)
-    fish_bait = db.Column(db.String(50), nullable=True) # Can this be an array?
+    fish_bait = db.Column(db.Array(50), nullable=True) # Can this be an array? # Use JSON type?
     fish_wc1 = db.Column(db.String(500), nullable=True) # same with this
     fish_wc2 = db.Column(db.String(500), nullable=True) 
     fish_timetable = db.Column(db.String(500), nullable=True)
+    mooch_fish = db.Column(db.String(16), nullable=True)
 
-    # fish_time_start = db.Column(db.String(8), nullable=True)
-    # fish_time_end = db.Column(db.String(8), nullable=True)
+    # Another idea for storing various bait and preceding weather conditions is to store them as an integer
+
+    # Example:
+
+    # 0 = Fair Skies
+    # 1 = Clear Skies
+    # 2 = Fog
+    # 3 = Thunder
+    # 4 = Dust Storms
+    # 5 = Rain
+
+
+    # 025 > 1 could mean Fair/Fog/Rain preceding Clear Skies are all valid
+
+    fish_time_start = db.Column(db.String(8), nullable=True)
+    fish_time_end = db.Column(db.String(8), nullable=True)
 
     def __repr__(self):
         """Provides information on the fish."""
