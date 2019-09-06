@@ -37,7 +37,7 @@ def load_fish():
 
     for row in open("fish_data.txt"):
         row = row.rstrip()
-        fish_name, fish_img, fish_location, fish_bait, fish_wc1, fish_wc2, fish_time_start, fish_time_end = row.split(",")
+        fish_name, fish_img, fish_location, fish_bait, fish_wc1, fish_wc2, fish_time_start, fish_time_end, mooch_fish_name = row.split(",")
 
         fish = Fish(fish_name = fish_name.strip(),
                     fish_img = fish_img.strip(),
@@ -47,6 +47,7 @@ def load_fish():
                     fish_wc2 = fish_wc2.strip(),
                     fish_time_start = fish_time_start.strip(),
                     fish_time_end = fish_time_end.strip()
+                    mooch_fish_name = mooch_fish_name.strip()
 
         db.session.add(fish)
         

@@ -1,7 +1,16 @@
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import Enum
 from datetime import datetime
 
+from model_constants import (
+BAIT_TYPE, WEATHER_INTERVALS,
+WEATHER_CONDITIONS
+)
+
+
 db = SQLAlchemy()
+
+"""Data Model for Angler Timetable"""
 
 # General idea: database stores fish species/catch conditions
 # One user may have many fish in their list of fish to catch
@@ -67,11 +76,11 @@ class Fish(db.Model):
     fish_name = db.Column(db.String(50), nullable=False)
     fish_location = db.Column(db.String(24), nullable=True)
     fish_img = db.Column(db.String(50), nullable=True)
-    fish_bait = db.Column(db.Array(50), nullable=True) # Can this be an array? # Use JSON type?
+    fish_bait = db.Column(db.String(50), nullable=True) # Can this be an array? # Use JSON type?
     fish_wc1 = db.Column(db.String(500), nullable=True) # same with this
     fish_wc2 = db.Column(db.String(500), nullable=True) 
     fish_timetable = db.Column(db.String(500), nullable=True)
-    mooch_fish = db.Column(db.String(16), nullable=True)
+    mooch_fish_name = db.Column(db.String(16), nullable=True)
 
     # Another idea for storing various bait and preceding weather conditions is to store them as an integer
 

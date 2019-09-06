@@ -1,7 +1,12 @@
 from jinja2 import StrictUndefined
 from flask import (Flask, jsonify, render_template, redirect, request, flash,
                    session, url_for)
+from werkzeug.utils import secure_filename
+from flask_debugtoolbar import DebugToolbarExtension
+from random import randint
+from model import User, Fish, FishList, connect_to_db, db
 
+import requests
 import bcrypt
 
 
@@ -15,7 +20,20 @@ app.jinja_env.undefined = StrictUndefined
 # Create login and sign up system
 
 
+@app.route('/')
+def index():
+    """Homepage"""
 
+    user = None
+
+    if 'user_id' in session:
+        user = User.query.get(session['user_id'])
+        print('Current logged in user is: ' + str(session['user_id']))
+
+    else:
+        print('No user currently logged in.')
+
+    return render_template('homepage.html', user=user)
 
 
 def get_hashed_password(plain_text_password):
