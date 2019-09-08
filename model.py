@@ -12,6 +12,8 @@ db = SQLAlchemy()
 
 """Data Model for Angler Timetable"""
 
+
+
 # General idea: database stores fish species/catch conditions
 # One user may have many fish in their list of fish to catch
 # Eventually, the user will be able to query for only the fish they still need and omit the rest
@@ -24,6 +26,9 @@ db = SQLAlchemy()
 # One user has many fish and any given fish may be favourited by more than one user
 # Many to many relationship
 
+# nullable=False is a required field
+# can include "unique" and "default" variables
+
 class User(db.Model):
 
     # Users create rows in the database by signing up, and have lists of fish that they may
@@ -33,7 +38,7 @@ class User(db.Model):
 
     user_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     username = db.Column(db.String(50), nullable=False)
-    fname = db.Column(db.String(50))
+    fname = db.Column(db.String(50), nullable=False)
     lname = db.Column(db.String(50))
     email = db.Column(db.String(50))
     password = db.Column(db.String(150))
@@ -42,11 +47,14 @@ class User(db.Model):
         """Provides information on the user."""
         return 'User ID: {}, First Name: {}, Last Name: {}, Username: {}'.format(self.user_id, self.fname, self.lname, self.username)
 
+## Fish Class
+
+fish_bait_enum = Enum(*BAIT_TYPE, name="bait_type")
+fish_wc2_enum = Enum(*WEATHER_CONDITIONS, name="weather_conditions") # Preceding weather conditions
 
 class Fish(db.Model):
-    # List of all fish with specific weather requirements
-    # Each fish has an official in-game name, image, bait type, weather condition requirement
-    
+
+    """Fish class, including weather and time"""
     # Notes:
     
     # There may be more than one type of bait that works
@@ -70,16 +78,19 @@ class Fish(db.Model):
     # First time slot begins at start[0], finishes end[0]
     # Second time slot begins at start[1], finishes end[1]
 
-    __tablename__ = "fishies"
+    # For now, assume that there is only one start and end time
+
+    __tablename__ = "fish"
 
     fish_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     fish_name = db.Column(db.String(50), nullable=False)
-    fish_location = db.Column(db.String(24), nullable=True)
+    fishing_hole = db.Column(db.String(24), nullable=False) 
     fish_img = db.Column(db.String(50), nullable=True)
-    fish_bait = db.Column(db.String(50), nullable=True) # Can this be an array? # Use JSON type?
-    fish_wc1 = db.Column(db.String(500), nullable=True) # same with this
-    fish_wc2 = db.Column(db.String(500), nullable=True) 
-    fish_timetable = db.Column(db.String(500), nullable=True)
+    fish_bait = db.Column(fish_bait_enum, nullable=False) 
+    fish_wc1 = db.Column(db.String(500), nullable=True) # Some fish may not have a weather requirement
+    fish_wc2 = db.Column(fish_wc2_enum, nullable=True) 
+    fish_time_start = db.Column(db.String(500), default="None", nullable=True)
+    fish_time_end = db.Column(db.String(500), default="None", nullable=True)
     mooch_fish_name = db.Column(db.String(16), nullable=True)
 
     # Another idea for storing various bait and preceding weather conditions is to store them as an integer
@@ -93,10 +104,9 @@ class Fish(db.Model):
     # 4 = Dust Storms
     # 5 = Rain
 
-
     # 025 > 1 could mean Fair/Fog/Rain preceding Clear Skies are all valid
 
-    fish_time_start = db.Column(db.String(8), nullable=True)
+    fish_time_start = db.Column(db.String(8), nullable=True) # Some fish may not have start or end time
     fish_time_end = db.Column(db.String(8), nullable=True)
 
     def __repr__(self):
@@ -119,7 +129,7 @@ class FishList(db.Model):
 
     to_fish_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     fish_id = db.Column(db.Integer, 
-                        db.ForeignKey('fishies.fish_id')) 
+                        db.ForeignKey('fish.fish_id')) 
     
     user_id = db.Column(db.Integer, 
                         db.ForeignKey('users.user_id'))
@@ -136,6 +146,47 @@ class FishList(db.Model):
     def __repr__(self):
         """Provides information on the user-fish connection."""
         return 'User {} has favourited {} fish'.format(self.user, self.fish)
+
+
+region_enum = 
+
+class Region(db.Model):
+    """Regions in Eorzea, created to sort fish by region"""
+
+    __tablename__ = "regions"
+
+    region_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    subregion = db.relationship("Subregion",
+                           backref="regions",
+                           order_by=region_id)
+    # Regions have numerous subregions
+
+subregion_enum = 
+
+class Subregion(db.Model):
+    """Location model, each World has several regions"""
+
+    __tablename__ = "subregions"
+
+    subregion_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    fishing_hole = db.relationship("FishingHole",
+                           backref="subregions",
+                           order_by=subregion_id)
+    # Subregions have numerous fishing holes
+
+
+fishing_hole_enum = 
+
+class FishingHole(db.Model):
+    """Fish belong to specific Fishing holes, each fish can only be found at one specific hole"""
+    # Leaf nodes - each fishing hole maps to any number of big fish
+
+    fishing_hole_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+
+
+    __tablename__ = "fishing_holes"
+
+
 
 
 # Helper functions

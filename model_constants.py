@@ -18,9 +18,42 @@ WEATHER_INTERVALS = {
     }
 }
 
+# WEATHER_INTERVALS = {
+#         start1: "00:00", 
+#         end1: "08:00",
+#         start2: "16:00", 
+#         end2: "00:00",
+#         start3: "08:00", 
+#         end3: "16:00"
+# }
+
 WEATHER_CONDITIONS = ("Blizzard", "Clear Skies", "Clouds", "Dust Storms", 
     "Fair Skies", "Fog", "Gales", "Heat Waves", "Rain", "Sandstorms", "Showers", 
     "Snow", "Thunder", "Thunderstorms", "Umbral Static", "Umbral Wind", "Wind")
+
+REGIONS = ("Thanalan", "The Black Shroud", "La Noscea", "Mor Dhona", "Coerthas", "Abalathia", "Dravania", "Gyr Abania")
+
+
+SUBREGIONS = 
+
+# Dravania
+
+"Idyllshire", "The Dravanian Forelands", "The Dravanian Hinterlands", "The Churning Mists"
+
+# Gyr Abania
+
+"Rhalgr's Reach", "The Fringes", "The Lochs", "The Peaks"
+
+# Othard
+
+"Kugane", "The Azim Steppe", "The Ruby Sea", "Yanxia"
+
+# Norvandt
+
+"Crystarium", "Lakeland", "Eulmore", "Kholusia", "Amh Araeng", "Il Mheg", "The Rak'tika Greatwood", "The Tempest"
+
+FISHING_HOLES = 
+
 
 # Eventually add spearfishing?
 # FISHING_TYPE = ("Fishing", "Spearfishing")

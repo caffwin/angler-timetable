@@ -1,4 +1,4 @@
-fish_name, fish_img, fish_location, fish_bait, fish_wc1, fish_wc2, fish_time_start, fish_time_end, is_mooch
+fish_name, fish_img, fish_location, fish_bait, fish_wc1, fish_wc2, fish_time_start, fish_time_end, 
 Ukiki, /img/fish.jpg, Hell's Lid, Blue Bobbit, Wind, None, 08:00, 12:00, False
 Alligator Snapping Turtle, /img/fish2.jpg, The Bull's Bath, Suspending Minnow, [Clear, Fair], None, None, None, False
 Lily of the Veil, /img/fish3.jpg, The Arms of Meed, Suspending Minnow, Fair, Clear, None, None, False
