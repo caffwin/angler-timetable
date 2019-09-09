@@ -29,6 +29,9 @@ db = SQLAlchemy()
 # nullable=False is a required field
 # can include "unique" and "default" variables
 
+
+#### User Class #####
+
 class User(db.Model):
 
     # Users create rows in the database by signing up, and have lists of fish that they may
@@ -39,18 +42,21 @@ class User(db.Model):
     user_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     username = db.Column(db.String(50), nullable=False)
     fname = db.Column(db.String(50), nullable=False)
-    lname = db.Column(db.String(50))
-    email = db.Column(db.String(50))
-    password = db.Column(db.String(150))
+    lname = db.Column(db.String(50), nullable=False)
+    email = db.Column(db.String(50), nullable=False)
+    password = db.Column(db.String(150), nullable=False)
+
+    # All fields required when signing up
 
     def __repr__(self):
         """Provides information on the user."""
         return 'User ID: {}, First Name: {}, Last Name: {}, Username: {}'.format(self.user_id, self.fname, self.lname, self.username)
 
-## Fish Class
+
+##### Fish Class #####
 
 fish_bait_enum = Enum(*BAIT_TYPE, name="bait_type")
-fish_wc2_enum = Enum(*WEATHER_CONDITIONS, name="weather_conditions") # Preceding weather conditions
+# fish_wc2_enum = Enum(*WEATHER_CONDITIONS, name="weather_conditions") # Preceding weather conditions
 
 class Fish(db.Model):
 
@@ -87,8 +93,8 @@ class Fish(db.Model):
     fishing_hole = db.Column(db.String(24), nullable=False) 
     fish_img = db.Column(db.String(50), nullable=True)
     fish_bait = db.Column(fish_bait_enum, nullable=False) 
-    fish_wc1 = db.Column(db.String(500), nullable=True) # Some fish may not have a weather requirement
-    fish_wc2 = db.Column(fish_wc2_enum, nullable=True) 
+    fish_wc1 = db.Column(db.String(500), default="None", nullable=True) # Some fish may not have a weather requirement
+    fish_wc2 = db.Column(fish_wc2_enum, default="None", nullable=True) 
     fish_time_start = db.Column(db.String(500), default="None", nullable=True)
     fish_time_end = db.Column(db.String(500), default="None", nullable=True)
     mooch_fish_name = db.Column(db.String(16), nullable=True)
@@ -144,11 +150,73 @@ class FishList(db.Model):
     # No backref needed, not necessary to check how many users have favourited a specific fish
 
     def __repr__(self):
-        """Provides information on the user-fish connection."""
+        """Provides information on each user-fish relationship."""
         return 'User {} has favourited {} fish'.format(self.user, self.fish)
 
 
-region_enum = 
+##### Weather-related Classes #####
+
+class WeatherType(db.Model):
+    """Weather class"""
+
+    __tablename__ = "weather_types"
+
+    weather_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    weather_name = db.Column(db.String(16), nullable=False)
+    
+    def __repr__(self):
+        """Prints weather type."""
+        return 'Weather type is: {}'.format(self.weather_name)
+
+
+
+class WeatherRequired(db.Model): 
+    """Table containing fish with weather requirements"""
+
+    # The weather requirement must exist for this fish to be eligible for capture 
+    # This weather requirement may need to be preceded by a weather window
+    # This is the wc1 attribute for the fish class
+
+    __tablename__ = "weather_fish"
+
+    weather_required_id = # PK
+    fish = db.relationship('Fish') # FK
+    weather = db.relationship('WeatherType') # FK
+
+    def __repr__(self):
+        """Provides information on the required weather condition for a specific fish."""
+        return 'The {} fish is available under {} condition'.format(self.fish.fish_name, self.weather.weather_name)
+
+        # Eventually: print out a different string stating the preceding weather if that exists
+
+
+class WeatherPreceding(db.Model):
+    """Table containing fish whose weather windows must be preceded by another window."""
+    # If a row exists in this table, it means:
+    # 1) The fish is only catchable under a certain weather condition and
+    # 2) That weather condition must be preceded by another weather condition
+    # 3) There may be more than one weather condition that can precede the required weather condition,
+    # so several rows may exist for one specific fish
+    # Example: Clear Skies > Thunder or Fair Skies > Thunder or Fog > Thunder for one specific fish
+    # where wc1 = Thunder and wc2 = Clear Skies, Fair Skies, or Fog
+
+    # This is the wc2 attribute for the fish class
+    # Also add in relationship with WeatherRequired class - WeatherPreceding only exists if
+    # WeatherRequired exists 
+
+    weather_preceding_id = # PK
+    fish_id = db.Column(db.Integer, 
+                        db.ForeignKey('fish.fish_id'))# FK
+    weather_id = db.Column(db.Integer, 
+                        db.ForeignKey('weather_types.weather_id'))# FK
+    req_weather_id = db.Column(db.Integer, 
+                        db.ForeignKey('weather_fish.weather_required_id'))# FK
+
+
+
+##### Region Class #####
+
+# region_enum = 
 
 class Region(db.Model):
     """Regions in Eorzea, created to sort fish by region"""
@@ -161,7 +229,7 @@ class Region(db.Model):
                            order_by=region_id)
     # Regions have numerous subregions
 
-subregion_enum = 
+# subregion_enum = 
 
 class Subregion(db.Model):
     """Location model, each World has several regions"""
@@ -175,16 +243,22 @@ class Subregion(db.Model):
     # Subregions have numerous fishing holes
 
 
-fishing_hole_enum = 
+fishing_hole_enum = ENUM(FISHING_HOLES, name="fishing_holes")
 
 class FishingHole(db.Model):
     """Fish belong to specific Fishing holes, each fish can only be found at one specific hole"""
-    # Leaf nodes - each fishing hole maps to any number of big fish
-
-    fishing_hole_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-
+    # Fishing holes are the leaf nodes to the world tree model (region-subregion-fishing_hole)
+    # One to many relationship between fishing hole and big fish
 
     __tablename__ = "fishing_holes"
+
+    fishing_hole_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    fishing_hole_name = db.Column(fishing_hole_enum, nullable=False)
+
+    def __repr__(self):
+        """Prints the name of the current fishing hole."""
+        return 'The current fishing hole is: {}'.format(self.fishing_hole_name)
+
 
 
 
