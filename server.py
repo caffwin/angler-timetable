@@ -49,6 +49,23 @@ def check_password(plain_text_password, hashed_password):
 
 
 
+@app.route("/register", methods=["GET"])
+def registration_form():
+
+    return render_template("register_page.html")
+
+
+def register_user():
+    # Work on this
+    return redirect("/")
+    
+
+@app.route("/login", methods=["GET"])
+def login_form():
+
+    return render_template("login_page.html")
+    # Instead of this, figure out a way to create a pop up for easy login without page refresh
+
 if __name__ == "__main__":
 
     app.debug = False

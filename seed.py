@@ -2,6 +2,7 @@ from sqlalchemy import func
 from model import User
 from model import Fish
 from model import FishList
+from model import 
 from datetime import datetime # For later
 
 # Loads users into database
@@ -72,6 +73,25 @@ def load_fishlist():
 
         db.session.add(list_fish)
         
+    db.session.commit()
+
+def load_weather():
+    """Loading all weather conditions"""
+    print("Weather List")
+
+    WeatherType.query.delete()
+
+    """Loads all available weather conditions into database."""
+
+    for row in open("weather_data.txt"):
+        row = row.rstrip()
+        weather_condition = row
+        # Nothing to split on since it's just one column
+
+        weather = WeatherType(weather_condition = weather_condition.strip())
+        
+        db.session.add(weather)
+
     db.session.commit()
 
 

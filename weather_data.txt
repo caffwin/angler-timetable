@@ -1,0 +1,18 @@
+weather_condition
+Blizzard
+Clear Skies
+Clouds
+Dust Storms
+Fair Skies
+Fog
+Gales
+Heat Waves
+Rain
+Sandstorms
+Showers
+Snow
+Thunder
+Thunderstorms
+Umbral Static
+Umbral Wind
+Wind
