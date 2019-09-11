@@ -27,9 +27,9 @@ WEATHER_INTERVALS = {
 #         end3: "16:00"
 # }
 
-WEATHER_CONDITIONS = ("Blizzard", "Clear Skies", "Clouds", "Dust Storms", 
-    "Fair Skies", "Fog", "Gales", "Heat Waves", "Rain", "Sandstorms", "Showers", 
-    "Snow", "Thunder", "Thunderstorms", "Umbral Static", "Umbral Wind", "Wind")
+# WEATHER_CONDITIONS = ("Blizzard", "Clear Skies", "Clouds", "Dust Storms", 
+#     "Fair Skies", "Fog", "Gales", "Heat Waves", "Rain", "Sandstorms", "Showers", 
+#     "Snow", "Thunder", "Thunderstorms", "Umbral Static", "Umbral Wind", "Wind")
 
 REGIONS = ("Thanalan", "The Black Shroud", "La Noscea", "Mor Dhona", "Coerthas", "Abalathia", "Dravania", "Gyr Abania")
 

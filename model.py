@@ -177,9 +177,9 @@ class WeatherRequired(db.Model):
     # This weather requirement may need to be preceded by a weather window
     # This is the wc1 attribute for the fish class
 
-    __tablename__ = "weather_fish"
+    __tablename__ = "weather_reqs" # Think of a better name?
 
-    weather_required_id = # PK
+    weather_required_id = db.Column(db.Integer, autoincrement=True, primary_key=True) # PK
     fish = db.relationship('Fish') # FK
     weather = db.relationship('WeatherType') # FK
 
@@ -191,7 +191,8 @@ class WeatherRequired(db.Model):
 
 
 class WeatherPreceding(db.Model):
-    """Table containing fish whose weather windows must be preceded by another window."""
+    """Table containing fish that have a weather requirement that must be preceded by additional weather requirement(s)."""
+
     # If a row exists in this table, it means:
     # 1) The fish is only catchable under a certain weather condition and
     # 2) That weather condition must be preceded by another weather condition
@@ -204,17 +205,22 @@ class WeatherPreceding(db.Model):
     # Also add in relationship with WeatherRequired class - WeatherPreceding only exists if
     # WeatherRequired exists 
 
-    weather_preceding_id = # PK
+    __tablename__ = "pre_weather" # Think of a better name?
+
+    weather_preceding_id = db.Column(db.Integer, autoincrement=True, primary_key=True) # PK
     fish_id = db.Column(db.Integer, 
-                        db.ForeignKey('fish.fish_id'))# FK
+                        db.ForeignKey('fish.fish_id')) # FK
     weather_id = db.Column(db.Integer, 
-                        db.ForeignKey('weather_types.weather_id'))# FK
+                        db.ForeignKey('weather_reqs.weather_id')) # FK
     req_weather_id = db.Column(db.Integer, 
-                        db.ForeignKey('weather_fish.weather_required_id'))# FK
+                        db.ForeignKey('weather_reqs.weather_required_id')) # FK
 
 
 
 ##### Region Class #####
+
+
+# Still deciding how to implement this
 
 # region_enum = 
 
@@ -224,10 +230,26 @@ class Region(db.Model):
     __tablename__ = "regions"
 
     region_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    subregion = db.relationship("Subregion",
-                           backref="regions",
-                           order_by=region_id)
+    region_name = db.Column(db.String(24), nullable=False)
+    # subregion_id = db.Column(db.Integer, 
+    #                     db.ForeignKey("subregions.subregion_id")) # Linked by this attribute
+
+    # subregion = db.relationship("Subregion",
+    #                             backref="regions",
+    #                             order_by="region_id")
+
     # Regions have numerous subregions
+
+    def __repr__(self):
+        """Prints region name"""
+
+        return '<Region ID: {}, Region name: {}>'.format(self.region_id, self.region_name)
+        # Try: regions.region_id and subregion.subregion_id
+
+
+class RegionSubregion(db.Model):
+    """Region to subregion relationships exist as rows here"""
+
 
 # subregion_enum = 
 
@@ -242,6 +264,10 @@ class Subregion(db.Model):
                            order_by=subregion_id)
     # Subregions have numerous fishing holes
 
+    def __repr__(self):
+        """Prints"""
+
+        return '<User ID: {}, Bird ID: {}>'.format(self.user_id, self.bird_id)
 
 fishing_hole_enum = ENUM(FISHING_HOLES, name="fishing_holes")
 
